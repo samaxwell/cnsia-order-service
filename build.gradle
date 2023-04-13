@@ -33,6 +33,8 @@ dependencies {
 	runtimeOnly 'org.springframework:spring-jdbc'
 
 	annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
+
+	testImplementation 'com.squareup.okhttp3:mockwebserver'
 }
 
 dependencyManagement {
