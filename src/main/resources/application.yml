@@ -22,3 +22,6 @@ spring:
     user: ${spring.r2dbc.username}
     password: ${spring.r2dbc.password}
     url: jdbc:postgresql://localhost:5432/polardb_order # the same database configured for R2DBC but using the JDBC driver
+
+polar:
+  catalog-service-uri: "http://localhost:9001" # will be overridden by k8s service env var when deployed
