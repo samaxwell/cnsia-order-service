@@ -2,6 +2,7 @@ package com.polarbookshop.orderservice.book;
 
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
+import org.springframework.web.reactive.function.client.WebClientResponseException;
 import reactor.core.publisher.Mono;
 import reactor.util.retry.Retry;
 
@@ -24,9 +25,13 @@ public class BookClient {
                 .retrieve()
                 .bodyToMono(Book.class)
                 .timeout(Duration.ofSeconds(3), Mono.empty()) // Monitor to tune duration (and externalize)
+                // In event of 404 (Book not available), just return empty mono
+                .onErrorResume(WebClientResponseException.NotFound.class, exception -> Mono.empty())
                 .retryWhen(
                         Retry.backoff(3, Duration.ofMillis(100)) // exponential
-                );
+                )
+                // return empty mono if exception occurs after 3 retries
+                .onErrorResume(Exception.class, exception -> Mono.empty());
     }
 }
 
